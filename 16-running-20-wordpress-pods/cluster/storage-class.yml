@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-replicated
+parameters:
+  protocol: nvmf
+  repl: "3"
+provisioner: io.openebs.csi-mayastor
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true

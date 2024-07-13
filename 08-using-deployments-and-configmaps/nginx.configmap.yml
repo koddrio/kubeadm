@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx.conf.d
+data:
+  wordpress.conf: |
+    server {
+      listen 80 default_server;
+      server_name _;
+      root /var/www/html;
+      index index.php index.html;
+
+      location / {
+        try_files $uri $uri/ /index.php?$args;
+      }
+
+      location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass wordpress:9000;
+      }
+    }

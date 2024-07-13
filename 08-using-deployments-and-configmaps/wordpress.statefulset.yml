@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:6.5-fpm
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: www-data
+          mountPath: /var/www/html
+        env:
+          - name: WORDPRESS_DB_HOST
+            value: mariadb
+          - name: WORDPRESS_DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mariadb
+                key: username
+          - name: WORDPRESS_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: mariadb
+                key: database
+          - name: WORDPRESS_DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mariadb
+                key: password
+
+      volumes:
+      - name: www-data
+        persistentVolumeClaim:
+          claimName: www-data
