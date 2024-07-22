@@ -72,16 +72,6 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/conf.d
           readOnly: true
-        # readinessProbe:
-        #   httpGet:
-        #     path: /index.php
-        #     port: 80
-        #     httpHeaders:
-        #     - name: Host
-        #       value: k0
-        #   failureThreshold: 1
-        #   periodSeconds: 10
-        #   initialDelaySeconds: 5
 
       volumes:
       - name: www-data
