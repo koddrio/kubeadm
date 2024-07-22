@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: wordpress
 spec:
-  minReplicas: 4
+  minReplicas: 1
   maxReplicas: 20
   metrics:
   - resource:
