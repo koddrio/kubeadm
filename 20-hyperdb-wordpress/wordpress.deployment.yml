@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      initContainers:
+      - name: init
+        image: alpine/git
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - cd /var/www/html;
+          git clone git@github.com:koddrio/k8s-sample-application.git .;
+          git reset --hard $HASH;
+          rm -rf .git
+        env:
+        - name: HASH
+          value: origin/hyperdb
+        volumeMounts:
+        - name: www-data
+          mountPath: /var/www/html
+        - name: wordpress-dotssh
+          mountPath: /root/.ssh/
+          readOnly: true
+
+      containers:
+      - name: wordpress
+        image: wordpress:6.6.0-fpm
+        resources:
+          requests:
+            cpu: 100m
+            memory: 48Mi
+          limits:
+            cpu: 200m
+            memory: 96Mi
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: www-data
+          mountPath: /var/www/html
+        envFrom:
+        - secretRef:
+            name: wordpress-secrets
+        - configMapRef:
+            name: wordpress-env
+
+      - name: nginx
+        image: nginx:1.27.0
+        resources:
+          requests:
+            cpu: 50m
+            memory: 16Mi
+          limits:
+            cpu: 100m
+            memory: 32Mi
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www-data
+          mountPath: /var/www/html
+          readOnly: true
+        - name: nginx
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+
+      volumes:
+      - name: www-data
+        emptyDir: {}
+      - name: wordpress-dotssh
+        secret:
+          secretName: wordpress-dotssh
+          defaultMode: 0600
+      - name: nginx
+        configMap:
+          name: wordpress-nginx
