@@ -1,0 +1,31 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: wordpress
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: wordpress
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+  passwordSecretKeyRef:
+    name: mariadb-secrets
+    key: MARIADB_PASSWORD
+  maxUserConnections: 0
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: wordpress
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+  privileges:
+  - ALL PRIVILEGES
+  database: wordpress
+  username: wordpress

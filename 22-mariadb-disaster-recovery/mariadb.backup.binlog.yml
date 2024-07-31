@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: wordpress-backup-binlog
+spec:
+  schedule: "0 0 * * 0"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: backup
+            image: docker-registry1.mariadb.com/library/mariadb:10.11.8
+            command:
+            - bash
+            - -c
+            - >
+              mkdir -p /pvc/binlogs; cd /pvc/binlogs;
+              BINLOG_START=$(mysql --host=wordpress-mariadb-primary --user=root
+              --password=${MARIADB_ROOT_PASSWORD} --silent --raw
+              -e 'show binary logs;' | head -1 | awk '{print $1}');
+              mysqlbinlog --read-from-remote-server
+              --host=wordpress-mariadb-primary --user=root
+              --password=${MARIADB_ROOT_PASSWORD} --raw
+              --to-last-log $BINLOG_START;
+            env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MARIADB_ROOT_PASSWORD
+                  name: mariadb-secrets
+            volumeMounts:
+            - mountPath: /pvc
+              name: pvc-mount
+          volumes:
+          - name: pvc-mount
+            persistentVolumeClaim:
+              claimName: wordpress-backup

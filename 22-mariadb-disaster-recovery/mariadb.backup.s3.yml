@@ -1,0 +1,20 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Backup
+metadata:
+  name: wordpress-backup-s3
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+  schedule:
+    cron: "*/1 * * * *"
+  maxRetention: 10m
+  storage:
+    s3:
+      bucket: mariadb
+      endpoint: minio:9000
+      accessKeyIdSecretKeyRef:
+        name: mariadb-secrets
+        key: MINIO_ACCESS_KEY
+      secretAccessKeySecretKeyRef:
+        name: mariadb-secrets
+        key: MINIO_SECRET_KEY

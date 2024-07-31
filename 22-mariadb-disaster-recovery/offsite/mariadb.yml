@@ -1,0 +1,25 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: wordpress-mariadb-offsite
+spec:
+  rootPasswordSecretKeyRef:
+    name: mariadb-secrets
+    key: MARIADB_ROOT_PASSWORD
+
+  storage:
+    size: 1Gi
+    storageClassName: openebs-hostpath
+
+  myCnf: |
+    [mariadb]
+    server_id=900
+    log_bin=wordpress-mariadb-offsite
+    read_only=1
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi

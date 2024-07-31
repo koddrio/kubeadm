@@ -1,0 +1,10 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Restore
+metadata:
+  name: restore
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+  backupRef:
+    name: wordpress-backup
+  targetRecoveryTime: 1970-01-01T00:00:00Z
