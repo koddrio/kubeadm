@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-browser
+spec:
+  containers:
+  - image: busybox
+    name: pvc-browser
+    command: ['sleep', 'infinity']
+    volumeMounts:
+    - mountPath: /pvc
+      name: pvc-mount
+
+  volumes:
+  - name: pvc-mount
+    persistentVolumeClaim:
+      claimName: wordpress-backup

@@ -1,0 +1,18 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Backup
+metadata:
+  name: wordpress-backup
+spec:
+  mariaDbRef:
+    name: wordpress-mariadb
+  schedule:
+    cron: "*/1 * * * *"
+  maxRetention: 10m
+  storage:
+    persistentVolumeClaim:
+      storageClassName: openebs-hostpath
+      resources:
+        requests:
+          storage: 100Mi
+      accessModes:
+        - ReadWriteOnce
