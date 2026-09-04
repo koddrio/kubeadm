@@ -35,7 +35,7 @@ data:
   WORDPRESS_DB_USER: wordpress
   WORDPRESS_DB_NAME: wordpress
   WORDPRESS_CONFIG_EXTRA: |
-    define( 'WP_AUTO_UPDATE_CORE', true );
+    define( 'WP_AUTO_UPDATE_CORE', false );
     define( 'DISALLOW_FILE_EDIT', true );
     define( 'DISALLOW_FILE_MODS', true );
   

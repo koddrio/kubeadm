@@ -35,7 +35,7 @@ spec:
 
       containers:
       - name: wordpress
-        image: wordpress:6.5.5-fpm
+        image: wordpress:7.1.0-php8.5-fpm
         ports:
         - containerPort: 9000
         volumeMounts:
@@ -48,7 +48,7 @@ spec:
             name: wordpress-env
 
       - name: nginx
-        image: nginx:1.27.0
+        image: nginx:1.30.4
         ports:
         - containerPort: 80
         volumeMounts:

@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: wordpress
-        image: wordpress:6.5-fpm
+        image: wordpress:7.1-php8.5-fpm
         ports:
         - containerPort: 9000
         volumeMounts:

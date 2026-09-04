@@ -35,7 +35,7 @@ spec:
 
       containers:
       - name: wordpress
-        image: wordpress:6.6.0-fpm
+        image: wordpress:7.1.0-php8.5-fpm
         resources:
           requests:
             cpu: 100m
@@ -55,7 +55,7 @@ spec:
             name: wordpress-env
 
       - name: nginx
-        image: nginx:1.27.0
+        image: nginx:1.30.4
         resources:
           requests:
             cpu: 50m
